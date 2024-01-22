@@ -23,7 +23,7 @@ labelencoder_sequential.classes_ = np.load("sequential_labelencoder.npy")  # Rep
 # labelencoder_vggish.classes_ = np.load("vggish_labelencoder.npy")  # Replace with your VGGish label encoder path
 
 labelencoder_gru = LabelEncoder()
-labelencoder_gru.classes_ = np.load("vggish_labelencoder.npy")  # Replace with your VGGish label encoder path
+labelencoder_gru.classes_ = np.load("gru_labelencoder.npy")  # Replace with your VGGish label encoder path
 
 # Set the browser tab icon (favicon)
 st.set_page_config(
@@ -87,8 +87,8 @@ for i, uploaded_file in enumerate(uploaded_files):
             # st.success(f"For {uploaded_file.name}, VGGish predicted bird is: {predicted_bird_vggish}")
 
             # Predict using GRU model
-            predicted_bird_gru = predict_bird(audio_bytes, model_gru, labelencoder_vggish)
-            st.success(f"For {uploaded_file.name}, GRU predicted bird is: {predicted_bird_vggish}")
+            predicted_bird_gru = predict_bird(audio_bytes, model_gru, labelencoder_gru)
+            st.success(f"For {uploaded_file.name}, GRU predicted bird is: {predicted_bird_gru}")
 
 # Sidebar with app description and contact information
 st.sidebar.title("About the App")
