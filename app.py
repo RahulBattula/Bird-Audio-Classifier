@@ -26,15 +26,17 @@ st.set_page_config(
     page_icon="🐦"  # You can use an emoji or provide a URL to an image
 )
 
-def extract_mfcc_features(audio_bytes):
+def extract_mfcc_features(audio_bytes, n_mfcc=21):
     audio, sample_rate = librosa.load(BytesIO(audio_bytes), res_type='kaiser_fast')
-    mfccs_features = librosa.feature.mfcc(y=audio, sr=sample_rate, n_mfcc=21)
-    mfccs_scaled_features = np.mean(mfccs_features.T, axis=0)
-    return mfccs_scaled_features
+    mfccs_features = librosa.feature.mfcc(y=audio, sr=sample_rate, n_mfcc=n_mfcc)
+    # Transpose the features to have (time_steps, num_features) shape
+    mfccs_features = mfccs_features.T
+    return mfccs_features
 
 def predict_with_model(model, labelencoder, audio_bytes):
-    mfccs_scaled_features = extract_mfcc_features(audio_bytes)
-    mfccs_scaled_features = mfccs_scaled_features.reshape(1, -1)
+    mfccs_features = extract_mfcc_features(audio_bytes)
+    mfccs_scaled_features = np.mean(mfccs_features, axis=0)
+    mfccs_scaled_features = mfccs_scaled_features.reshape(1, mfccs_scaled_features.shape[0], -1)
 
     predicted_label = model.predict(mfccs_scaled_features)
     predicted_class_index = np.argmax(predicted_label)
