@@ -33,17 +33,12 @@ def predict_bird(audio_bytes, model, labelencoder):
     mfccs_scaled_features = np.mean(mfccs_features.T, axis=0)
     mfccs_scaled_features = mfccs_scaled_features.reshape(1, -1)
 
-    print("Shape of mfccs_scaled_features:", mfccs_scaled_features.shape)
-
     # Make prediction using the loaded model
     predicted_label = model.predict(mfccs_scaled_features)
-    print("Predicted label shape:", predicted_label.shape)
-
     predicted_class_index = np.argmax(predicted_label)
     prediction_class = labelencoder.inverse_transform([predicted_class_index])
 
     return prediction_class[0]
-
 
 # Set the title and description
 st.title("Bird Audio Classifier")
@@ -75,16 +70,16 @@ for i, uploaded_file in enumerate(uploaded_files):
         # Display loading message while predicting
         with st.spinner(f"Predicting for {uploaded_file.name}..."):
             # Predict using LSTM model
-            predicted_bird_lstm = predict_with_model(model_lstm, labelencoder_lstm, audio_bytes)
+            predicted_bird_lstm = predict_bird(audio_bytes, model_lstm, labelencoder_lstm)
             st.success(f"For {uploaded_file.name}, LSTM predicted bird is: {predicted_bird_lstm}")
 
             # Predict using Sequential model
-            predicted_bird_sequential = predict_with_model(model_sequential, labelencoder_sequential, audio_bytes)
+            predicted_bird_sequential = predict_bird(audio_bytes, model_sequential, labelencoder_sequential)
             st.success(f"For {uploaded_file.name}, Sequential predicted bird is: {predicted_bird_sequential}")
 
-            # Predict using GRU model
-            predicted_bird_gru = predict_with_model(model_gru, labelencoder_gru, audio_bytes)
-            st.success(f"For {uploaded_file.name}, GRU predicted bird is: {predicted_bird_gru}")
+            # Predict using gru model
+            predicted_bird_gru = predict_bird(audio_bytes, model_gru, labelencoder_gru)
+            st.success(f"For {uploaded_file.name}, gru predicted bird is: {predicted_bird_gru}")
 
 # Sidebar with app description and contact information
 st.sidebar.title("About the App")
