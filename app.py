@@ -26,10 +26,10 @@ st.set_page_config(
     page_icon="🐦"  # You can use an emoji or provide a URL to an image
 )
 
-def predict_bird(audio_bytes, model, labelencoder):
+def predict_bird(audio_bytes, model, labelencoder, n_mfcc=21):
     # Load and preprocess the audio file for prediction
     audio, sample_rate = librosa.load(BytesIO(audio_bytes), res_type='kaiser_fast')
-    mfccs_features = librosa.feature.mfcc(y=audio, sr=sample_rate, n_mfcc=40)
+    mfccs_features = librosa.feature.mfcc(y=audio, sr=sample_rate, n_mfcc=n_mfcc)
     mfccs_scaled_features = np.mean(mfccs_features.T, axis=0)
     mfccs_scaled_features = mfccs_scaled_features.reshape(1, -1)
 
@@ -70,16 +70,16 @@ for i, uploaded_file in enumerate(uploaded_files):
         # Display loading message while predicting
         with st.spinner(f"Predicting for {uploaded_file.name}..."):
             # Predict using LSTM model
-            predicted_bird_lstm = predict_bird(audio_bytes, model_lstm, labelencoder_lstm)
+            predicted_bird_lstm = predict_bird(audio_bytes, model_lstm, labelencoder_lstm, n_mfcc=40)
             st.success(f"For {uploaded_file.name}, LSTM predicted bird is: {predicted_bird_lstm}")
 
             # Predict using Sequential model
-            predicted_bird_sequential = predict_bird(audio_bytes, model_sequential, labelencoder_sequential)
+            predicted_bird_sequential = predict_bird(audio_bytes, model_sequential, labelencoder_sequential, n_mfcc=40)
             st.success(f"For {uploaded_file.name}, Sequential predicted bird is: {predicted_bird_sequential}")
 
-            # Predict using gru model
-            predicted_bird_gru = predict_bird(audio_bytes, model_gru, labelencoder_gru)
-            st.success(f"For {uploaded_file.name}, gru predicted bird is: {predicted_bird_gru}")
+            # Predict using GRU model
+            predicted_bird_gru = predict_bird(audio_bytes, model_gru, labelencoder_gru, n_mfcc=40)
+            st.success(f"For {uploaded_file.name}, GRU predicted bird is: {predicted_bird_gru}")
 
 # Sidebar with app description and contact information
 st.sidebar.title("About the App")
