@@ -17,13 +17,13 @@ labelencoder_lstm = LabelEncoder()
 labelencoder_lstm.classes_ = np.load("lstm_labelencoder.npy")
 
 labelencoder_sequential = LabelEncoder()
-labelencoder_sequential.classes_ = np.load("sequential_labelencoder.npy")  # Replace with your Sequential label encoder path
+labelencoder_sequential.classes_ = np.load("sequential_labelencoder.npy") 
 
 # labelencoder_vggish = LabelEncoder()
-# labelencoder_vggish.classes_ = np.load("vggish_labelencoder.npy")  # Replace with your VGGish label encoder path
+# labelencoder_vggish.classes_ = np.load("vggish_labelencoder.npy")
 
-# labelencoder_gru = LabelEncoder()
-# labelencoder_gru.classes_ = np.load("gru_labelencoder.npy")  # Replace with your VGGish label encoder path
+labelencoder_gru = LabelEncoder()
+labelencoder_gru.classes_ = np.load("gru_labelencoder.npy") 
 
 # Set the browser tab icon (favicon)
 st.set_page_config(
@@ -34,7 +34,7 @@ st.set_page_config(
 def predict_bird(audio_bytes, model, labelencoder):
     # Load and preprocess the audio file for prediction
     audio, sample_rate = librosa.load(BytesIO(audio_bytes), res_type='kaiser_fast')
-    mfccs_features = librosa.feature.mfcc(y=audio, sr=sample_rate, n_mfcc=40)
+    mfccs_features = librosa.feature.mfcc(y=audio, sr=sample_rate, n_mfcc=21)
     mfccs_scaled_features = np.mean(mfccs_features.T, axis=0)
     mfccs_scaled_features = mfccs_scaled_features.reshape(1, -1)
 
@@ -87,8 +87,8 @@ for i, uploaded_file in enumerate(uploaded_files):
             # st.success(f"For {uploaded_file.name}, VGGish predicted bird is: {predicted_bird_vggish}")
 
             # Predict using GRU model
-            # predicted_bird_gru = predict_bird(audio_bytes, model_gru, labelencoder_gru)
-            # st.success(f"For {uploaded_file.name}, GRU predicted bird is: {predicted_bird_gru}")
+            predicted_bird_gru = predict_bird(audio_bytes, model_gru, labelencoder_gru)
+            st.success(f"For {uploaded_file.name}, GRU predicted bird is: {predicted_bird_gru}")
 
 # Sidebar with app description and contact information
 st.sidebar.title("About the App")
