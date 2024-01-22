@@ -10,7 +10,8 @@ import plotly.graph_objects as go
 # Load the trained models and label encoders
 model_lstm = load_model("audio_classification_lstm.hdf5")
 model_sequential = load_model("audio_classification_sequential.hdf5")  # Replace with your Sequential model path
-model_vggish = load_model("audio_classification_vggish.hdf5")  # Replace with your VGGish model path
+# model_vggish = load_model("audio_classification_vggish.hdf5")  # Replace with your VGGish model path
+model_gru = load_model("audio_classification_gru.hdf5")  # Replace with your VGGish model path
 
 labelencoder_lstm = LabelEncoder()
 labelencoder_lstm.classes_ = np.load("lstm_labelencoder.npy")
@@ -86,7 +87,7 @@ for i, uploaded_file in enumerate(uploaded_files):
             # st.success(f"For {uploaded_file.name}, VGGish predicted bird is: {predicted_bird_vggish}")
 
             # Predict using GRU model
-            predicted_bird_gru = predict_bird(audio_bytes, model_vggish, labelencoder_vggish)
+            predicted_bird_gru = predict_bird(audio_bytes, model_gru, labelencoder_vggish)
             st.success(f"For {uploaded_file.name}, GRU predicted bird is: {predicted_bird_vggish}")
 
 # Sidebar with app description and contact information
