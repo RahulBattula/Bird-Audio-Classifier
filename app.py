@@ -36,7 +36,7 @@ def extract_mfcc_features(audio_bytes, n_mfcc=21):
 def predict_with_model(model, labelencoder, audio_bytes):
     mfccs_features = extract_mfcc_features(audio_bytes)
     mfccs_scaled_features = np.mean(mfccs_features, axis=0)
-    mfccs_scaled_features = mfccs_scaled_features.reshape(1, mfccs_scaled_features.shape[0], -1)
+    mfccs_scaled_features = mfccs_scaled_features.reshape(1, mfccs_scaled_features.shape[0], 1)
 
     predicted_label = model.predict(mfccs_scaled_features)
     predicted_class_index = np.argmax(predicted_label)
