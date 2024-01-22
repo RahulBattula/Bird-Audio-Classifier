@@ -33,12 +33,16 @@ def predict_bird(audio_bytes, model, labelencoder, n_mfcc=21):
     mfccs_scaled_features = np.mean(mfccs_features.T, axis=0)
     mfccs_scaled_features = mfccs_scaled_features.reshape(1, -1)
 
+    # For GRU, add an extra dimension for time steps
+    mfccs_scaled_features_gru = mfccs_scaled_features.reshape(1, mfccs_scaled_features.shape[1], 1)
+
     # Make prediction using the loaded model
-    predicted_label = model.predict(mfccs_scaled_features)
+    predicted_label = model.predict(mfccs_scaled_features_gru)
     predicted_class_index = np.argmax(predicted_label)
     prediction_class = labelencoder.inverse_transform([predicted_class_index])
 
     return prediction_class[0]
+
 
 # Set the title and description
 st.title("Bird Audio Classifier")
