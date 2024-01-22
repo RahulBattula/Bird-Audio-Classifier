@@ -29,7 +29,7 @@ st.set_page_config(
 def predict_bird(audio_bytes, model, labelencoder):
     # Load and preprocess the audio file for prediction
     audio, sample_rate = librosa.load(BytesIO(audio_bytes), res_type='kaiser_fast')
-    mfccs_features = librosa.feature.mfcc(y=audio, sr=sample_rate, n_mfcc=21)
+    mfccs_features = librosa.feature.mfcc(y=audio, sr=sample_rate, n_mfcc=40)
     mfccs_scaled_features = np.mean(mfccs_features.T, axis=0)
     mfccs_scaled_features = mfccs_scaled_features.reshape(1, -1)
 
