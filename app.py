@@ -11,7 +11,7 @@ import plotly.graph_objects as go
 model_lstm = load_model("audio_classification_lstm.hdf5")
 model_sequential = load_model("audio_classification_sequential.hdf5")
 # model_vggish = load_model("audio_classification_vggish.hdf5")
-# model_gru = load_model("audio_classification_gru.hdf5")
+model_gru = load_model("audio_classification_gru.hdf5")
 
 labelencoder_lstm = LabelEncoder()
 labelencoder_lstm.classes_ = np.load("lstm_labelencoder.npy")
