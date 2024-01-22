@@ -9,17 +9,21 @@ import plotly.graph_objects as go
 
 # Load the trained models and label encoders
 model_lstm = load_model("audio_classification_lstm.hdf5")
-model_sequential = load_model("audio_classification_sequential.hdf5")
+model_sequential = load_model("audio_classification_sequential.hdf5") 
+# model_vggish = load_model("audio_classification_vggish.hdf5")
 model_gru = load_model("audio_classification_gru.hdf5")
 
 labelencoder_lstm = LabelEncoder()
 labelencoder_lstm.classes_ = np.load("lstm_labelencoder.npy")
 
 labelencoder_sequential = LabelEncoder()
-labelencoder_sequential.classes_ = np.load("sequential_labelencoder.npy")
+labelencoder_sequential.classes_ = np.load("sequential_labelencoder.npy") 
+
+# labelencoder_vggish = LabelEncoder()
+# labelencoder_vggish.classes_ = np.load("vggish_labelencoder.npy")  
 
 labelencoder_gru = LabelEncoder()
-labelencoder_gru.classes_ = np.load("gru_labelencoder.npy")
+labelencoder_gru.classes_ = np.load("gru_labelencoder.npy")  
 
 # Set the browser tab icon (favicon)
 st.set_page_config(
@@ -27,12 +31,12 @@ st.set_page_config(
     page_icon="🐦"  # You can use an emoji or provide a URL to an image
 )
 
-def predict_bird(audio_bytes, model, labelencoder, n_mfcc=21):
+def predict_bird(audio_bytes, model, labelencoder):
     # Load and preprocess the audio file for prediction
     audio, sample_rate = librosa.load(BytesIO(audio_bytes), res_type='kaiser_fast')
-    mfccs_features = librosa.feature.mfcc(y=audio, sr=sample_rate, n_mfcc=n_mfcc)
+    mfccs_features = librosa.feature.mfcc(y=audio, sr=sample_rate, n_mfcc=21)
     mfccs_scaled_features = np.mean(mfccs_features.T, axis=0)
-    mfccs_scaled_features = mfccs_scaled_features.reshape(1, -1, n_mfcc)  # Reshape for models expecting 3D input
+    mfccs_scaled_features = mfccs_scaled_features.reshape(1, -1)
 
     # Make prediction using the loaded model
     predicted_label = model.predict(mfccs_scaled_features)
@@ -78,6 +82,22 @@ for i, uploaded_file in enumerate(uploaded_files):
             predicted_bird_sequential = predict_bird(audio_bytes, model_sequential, labelencoder_sequential)
             st.success(f"For {uploaded_file.name}, Sequential predicted bird is: {predicted_bird_sequential}")
 
+            # Predict using VGGish model
+            # predicted_bird_vggish = predict_bird(audio_bytes, model_vggish, labelencoder_vggish)
+            # st.success(f"For {uploaded_file.name}, VGGish predicted bird is: {predicted_bird_vggish}")
+
             # Predict using GRU model
             predicted_bird_gru = predict_bird(audio_bytes, model_gru, labelencoder_gru)
             st.success(f"For {uploaded_file.name}, GRU predicted bird is: {predicted_bird_gru}")
+
+# Sidebar with app description and contact information
+st.sidebar.title("About the App")
+st.sidebar.write(
+    "This web app allows you to upload bird audio files, predict the bird species, and visualize the waveform."
+)
+
+st.sidebar.title("Contact Me")
+st.sidebar.write(
+    "Feel free to contact me if you have any questions or suggestions. "
+    "You can reach me at example@email.com."
+)
